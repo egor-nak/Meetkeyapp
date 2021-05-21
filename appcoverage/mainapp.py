@@ -1,5 +1,7 @@
 import time
 import pygame
+import easygui
+import os
 
 
 # класс который отвечает за кнопку начала
@@ -256,6 +258,46 @@ class Selectvideobutton(pygame.sprite.Sprite):
             return False
 
 
+class Filename(pygame.sprite.Sprite):
+    def __init__(self, x, y, widthsurf):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((widthsurf, 50))
+        self.image.fill((255, 255, 255))
+        font = pygame.font.Font(None, 48)
+        with open("path.txt", 'r') as file:
+            road = file.read()
+        text = font.render(road, False, (0, 0, 0))
+        self.recttext = text.get_rect()
+        self.recttext.x = 0
+        self.recttext.y = 0
+        self.image.blit(text, self.recttext)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.x = x
+        self.y = y
+
+    def show(self):
+        self.rect.x = self.x
+        self.rect.y = self.y
+
+    def hide(self):
+        self.rect.x = -100000
+
+    def update(self):
+        self.image.fill((255, 255, 255))
+        font = pygame.font.Font(None, 48)
+        with open("path.txt", 'r') as file:
+            road = file.read().split('/')
+        if road[-1] == 'Nothing2':
+            road[-1] = 'Nothing'
+        text = font.render(road[-1], False, (0, 0, 0))
+        self.recttext = text.get_rect()
+        self.recttext.x = 0
+        self.recttext.y = 0
+        self.image.blit(text, self.recttext)
+
+
 if __name__ == '__main__':
     pygame.init()
     sprite = []
@@ -263,7 +305,6 @@ if __name__ == '__main__':
 
     # делает экран во всё окно
     screen = pygame.display.set_mode()
-
     W, H = screen.get_size()
     size = width, height = screen.get_size()
     running = True
@@ -293,8 +334,12 @@ if __name__ == '__main__':
 
     selectbuttonwidth = int(W // 3 * 0.6)
     selectbuttonheight = int(H * 0.1)
-    selectbutton = Selectvideobutton(W // 3 // 2 - selectbuttonwidth // 2, H * 0.3, selectbuttonwidth, selectbuttonheight)
+    selectbutton = Selectvideobutton(W // 3 // 2 - selectbuttonwidth // 2, H * 0.3, selectbuttonwidth,
+                                     selectbuttonheight)
     selectbutton.hide()
+
+    filaenamedisplay = Filename(10, H * 0.4, W//3 - 10)
+    filaenamedisplay.hide()
 
     # добавляем все спрайты в группу чтобы с ними было удобнее работать
     sprite.append(start)
@@ -313,10 +358,14 @@ if __name__ == '__main__':
     sprite_group.add(recordbutton)
     sprite.append(selectbutton)
     sprite_group.add(selectbutton)
+    sprite.append(filaenamedisplay)
+    sprite_group.add(filaenamedisplay)
 
     flag_not_main_window = False
     while running:
         screen.fill((255, 255, 255))
+        # обновление статуса выбора файла
+        filaenamedisplay.update()
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
@@ -330,9 +379,23 @@ if __name__ == '__main__':
                     flag_not_main_window = True
                     recordbutton.show()
                     selectbutton.show()
+                    filaenamedisplay.show()
+                if recordbutton.click_detection(pos[0], pos[1]):
+                    print(100000)
+                if selectbutton.click_detection(pos[0], pos[1]):
+                    print(101)
+                    os.system('python test.py')
+                    with open("path.txt", 'r') as pat:
+                        text = pat.read()
+                    print(text)
+                    while text == 'Nothing':
+                        with open("path.txt", 'r') as pat:
+                            text = pat.read()
+                        print(text)
+                    print('h')
             if event.type == pygame.QUIT:
                 running = False
-        clock.tick(fps)
+        # clock.tick(fps)
         sprite_group.update()
         sprite_group.draw(screen)
         for sp in sprite:

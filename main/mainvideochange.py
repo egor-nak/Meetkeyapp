@@ -8,6 +8,14 @@ from masks import vintage, invert, sepia, edgemode, picturestyle, blur, cirlur_b
     alphachanel, alphablend, grey, blackandwhite, cartoon, pencil
 import imageio
 
+while True:
+    with open('/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/appcoverage/canstart.txt', 'r') as file:
+        text = file.read()
+    if text == 'Yes':
+        break
+print('Start')
+
+
 class CFEVideoConf(object):
     # Standard Video Dimensions Sizes
     STD_DIMENSIONS = {
@@ -76,13 +84,6 @@ while True:
         changevideo = False
         while True:
             if changevideo:
-                with open('/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/appcoverage/path.txt',
-                          'r') as file:
-                    text = file.read()
-                if text == 'Nothing2' or text == 'Nothing':
-                    isreal = True
-                else:
-                    isreal = False
                 break
             with pyvirtualcam.Camera(width, height, fps, fmt=eval(f"PixelFormat.{name}"), print_fps=fps) as cam:
                 print(f'Virtual cam started: {cam.device} ({cam.width}x{cam.height} @ {cam.fps}fps)')
@@ -92,14 +93,15 @@ while True:
                         text = file.read()
                     if text != 'Nothing2' and text != 'Nothing':
                         changevideo = True
-                        print('break1')
+                        # print('break1')
                         break
                     # Restart
                     ret, frame = video.read()
                     if not ret:
                         raise RuntimeError('Error fetching frame')
                     try:
-                        f = open("/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/main/filtername.txt", "r").read()
+                        f = open("/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/main/filtername.txt",
+                                 "r").read()
                         frame = eval(f + ".filters(frame)")
                     except Exception as ex:
                         pass
@@ -129,13 +131,6 @@ while True:
         changevideo = False
         while True:
             if changevideo:
-                with open('/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/appcoverage/path.txt',
-                          'r') as file:
-                    text = file.read()
-                if text == 'Nothing2' or text == 'Nothing':
-                    isreal = True
-                else:
-                    isreal = False
                 break
             with pyvirtualcam.Camera(width, height, fps, fmt=eval(f"PixelFormat.{name}"), print_fps=fps) as cam:
                 print(f'Virtual cam started: {cam.device} ({cam.width}x{cam.height} @ {cam.fps}fps)')
@@ -145,7 +140,7 @@ while True:
                         text = file.read()
                     if text != initialpath or text == 'Nothing2' or text == 'Nothing':
                         changevideo = True
-                        print("break2")
+                        # print("break2")
                         break
                     # Restart video on last frame.
                     if count == length:
@@ -155,8 +150,9 @@ while True:
                     if not ret:
                         raise RuntimeError('Error fetching frame')
                     try:
-                        f = open("/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/main/filtername.txt", "r").read()
-                        print(f)
+                        f = open("/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/main/filtername.txt",
+                                 "r").read()
+                        # print(f)
                         frame = eval(f + ".filters(frame)")
                     except Exception as ex:
                         pass
@@ -171,5 +167,3 @@ while True:
                         break
                     cam.sleep_until_next_frame()
                     count += 1
-
-

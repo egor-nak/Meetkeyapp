@@ -2,6 +2,7 @@ import time
 import pygame
 import easygui
 import os
+from threading import Thread
 
 
 # класс который отвечает за кнопку начала
@@ -298,107 +299,111 @@ class Filename(pygame.sprite.Sprite):
         self.image.blit(text, self.recttext)
 
 
-if __name__ == '__main__':
-    pygame.init()
-    sprite = []
-    sprite_group = pygame.sprite.Group()
+pygame.init()
+sprite = []
+sprite_group = pygame.sprite.Group()
 
-    # делает экран во всё окно
-    screen = pygame.display.set_mode()
-    W, H = screen.get_size()
-    size = width, height = screen.get_size()
-    running = True
-    fps = 60
-    clock = pygame.time.Clock()
+# делает экран во всё окно
+screen = pygame.display.set_mode()
+W, H = screen.get_size()
+size = width, height = screen.get_size()
+running = True
+fps = 60
+clock = pygame.time.Clock()
 
-    # создаём все спрайты
-    start = Startbutton(W // 2 - int(W * 0.12), H - int(H * 0.3))
-    logowidth = 300
-    logoheight = 200
-    logo = Logo(W // 2 - int(logowidth * 0.4), logoheight * 0.6, logowidth, logoheight)
-    motto = Motto(W // 2 - int(760 // 2), H - int(H * 0.4))
-    widthvideochange = 225
-    videochangetitle = Videochangetitle(W // 3 // 2 - int(225 / 2), 20, widthvideochange)
-    videochangetitle.hide()
-    widthword = 185
-    checkwordtitle = Wordtitle(W // 3 // 2 - int(widthword / 2) + (W // 3), 20, widthword)
-    checkwordtitle.hide()
-    widthfilters = 100
-    filterstitle = Filterstitle(W // 3 // 2 - int(widthword / 2) + (W // 3 * 2), 20, widthfilters)
-    filterstitle.hide()
+# создаём все спрайты
+start = Startbutton(W // 2 - int(W * 0.12), H - int(H * 0.3))
+logowidth = 300
+logoheight = 200
+logo = Logo(W // 2 - int(logowidth * 0.4), logoheight * 0.6, logowidth, logoheight)
+motto = Motto(W // 2 - int(760 // 2), H - int(H * 0.4))
+widthvideochange = 225
+videochangetitle = Videochangetitle(W // 3 // 2 - int(225 / 2), 20, widthvideochange)
+videochangetitle.hide()
+widthword = 185
+checkwordtitle = Wordtitle(W // 3 // 2 - int(widthword / 2) + (W // 3), 20, widthword)
+checkwordtitle.hide()
+widthfilters = 100
+filterstitle = Filterstitle(W // 3 // 2 - int(widthword / 2) + (W // 3 * 2), 20, widthfilters)
+filterstitle.hide()
 
-    recordbuttonwidth = int(W // 3 * 0.6)
-    recordbuttonheight = int(H * 0.1)
-    recordbutton = Recordnowbutton(W // 3 // 2 - recordbuttonwidth // 2, H * 0.1, recordbuttonwidth, recordbuttonheight)
-    recordbutton.hide()
+recordbuttonwidth = int(W // 3 * 0.6)
+recordbuttonheight = int(H * 0.1)
+recordbutton = Recordnowbutton(W // 3 // 2 - recordbuttonwidth // 2, H * 0.1, recordbuttonwidth, recordbuttonheight)
+recordbutton.hide()
 
-    selectbuttonwidth = int(W // 3 * 0.6)
-    selectbuttonheight = int(H * 0.1)
-    selectbutton = Selectvideobutton(W // 3 // 2 - selectbuttonwidth // 2, H * 0.3, selectbuttonwidth,
-                                     selectbuttonheight)
-    selectbutton.hide()
+selectbuttonwidth = int(W // 3 * 0.6)
+selectbuttonheight = int(H * 0.1)
+selectbutton = Selectvideobutton(W // 3 // 2 - selectbuttonwidth // 2, H * 0.3, selectbuttonwidth,
+                                 selectbuttonheight)
+selectbutton.hide()
 
-    filaenamedisplay = Filename(10, H * 0.4, W//3 - 10)
-    filaenamedisplay.hide()
+filaenamedisplay = Filename(10, H * 0.4, W // 3 - 10)
+filaenamedisplay.hide()
 
-    # добавляем все спрайты в группу чтобы с ними было удобнее работать
-    sprite.append(start)
-    sprite_group.add(start)
-    sprite.append(logo)
-    sprite_group.add(logo)
-    sprite.append(motto)
-    sprite_group.add(motto)
-    sprite.append(videochangetitle)
-    sprite_group.add(videochangetitle)
-    sprite.append(checkwordtitle)
-    sprite_group.add(checkwordtitle)
-    sprite.append(filterstitle)
-    sprite_group.add(filterstitle)
-    sprite.append(recordbutton)
-    sprite_group.add(recordbutton)
-    sprite.append(selectbutton)
-    sprite_group.add(selectbutton)
-    sprite.append(filaenamedisplay)
-    sprite_group.add(filaenamedisplay)
+# добавляем все спрайты в группу чтобы с ними было удобнее работать
+sprite.append(start)
+sprite_group.add(start)
+sprite.append(logo)
+sprite_group.add(logo)
+sprite.append(motto)
+sprite_group.add(motto)
+sprite.append(videochangetitle)
+sprite_group.add(videochangetitle)
+sprite.append(checkwordtitle)
+sprite_group.add(checkwordtitle)
+sprite.append(filterstitle)
+sprite_group.add(filterstitle)
+sprite.append(recordbutton)
+sprite_group.add(recordbutton)
+sprite.append(selectbutton)
+sprite_group.add(selectbutton)
+sprite.append(filaenamedisplay)
+sprite_group.add(filaenamedisplay)
 
-    flag_not_main_window = False
-    while running:
-        screen.fill((255, 255, 255))
-        # обновление статуса выбора файла
-        filaenamedisplay.update()
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                pos = pygame.mouse.get_pos()
-                if start.click_detection(pos[0], pos[1]):
-                    start.hide()
-                    logo.hide()
-                    motto.hide()
-                    videochangetitle.show()
-                    checkwordtitle.show()
-                    filterstitle.show()
-                    flag_not_main_window = True
-                    recordbutton.show()
-                    selectbutton.show()
-                    filaenamedisplay.show()
-                if recordbutton.click_detection(pos[0], pos[1]):
-                    os.system('python file_selection.py')
-                if selectbutton.click_detection(pos[0], pos[1]):
-                    os.system('python file_selection.py')
+flag_not_main_window = False
+while running:
+    screen.fill((255, 255, 255))
+    # обновление статуса выбора файла
+    filaenamedisplay.update()
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            pos = pygame.mouse.get_pos()
+            if start.click_detection(pos[0], pos[1]):
+                with open('/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/appcoverage/canstart.txt', 'w') as file:
+                    file.write('Yes')
+                start.hide()
+                logo.hide()
+                motto.hide()
+                videochangetitle.show()
+                checkwordtitle.show()
+                filterstitle.show()
+                flag_not_main_window = True
+                recordbutton.show()
+                selectbutton.show()
+                filaenamedisplay.show()
+            if recordbutton.click_detection(pos[0], pos[1]):
+                pass
+            if selectbutton.click_detection(pos[0], pos[1]):
+                os.system('python file_selection.py')
+                with open("path.txt", 'r') as pat:
+                    text = pat.read()
+                while text == 'Nothing':
                     with open("path.txt", 'r') as pat:
                         text = pat.read()
-                    while text == 'Nothing':
-                        with open("path.txt", 'r') as pat:
-                            text = pat.read()
-            if event.type == pygame.QUIT:
-                running = False
-        clock.tick(fps)
-        sprite_group.update()
-        sprite_group.draw(screen)
-        for sp in sprite:
-            screen.blit(sp.image, sp.rect)
-        if flag_not_main_window:
-            pygame.draw.line(screen, (0, 0, 0), (W // 3, 0), (W // 3, H))
-            pygame.draw.line(screen, (0, 0, 0), (W // 3 * 2, 0), (W // 3 * 2, H))
-        pygame.display.update()
-        pygame.display.flip()
-    pygame.quit()
+        if event.type == pygame.QUIT:
+            running = False
+    clock.tick(fps)
+    sprite_group.update()
+    sprite_group.draw(screen)
+    for sp in sprite:
+        screen.blit(sp.image, sp.rect)
+    if flag_not_main_window:
+        pygame.draw.line(screen, (0, 0, 0), (W // 3, 0), (W // 3, H))
+        pygame.draw.line(screen, (0, 0, 0), (W // 3 * 2, 0), (W // 3 * 2, H))
+    pygame.display.update()
+    pygame.display.flip()
+pygame.quit()
+
+
+

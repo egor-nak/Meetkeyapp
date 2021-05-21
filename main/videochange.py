@@ -63,8 +63,12 @@ class CFEVideoConf(object):
             return self.VIDEO_TYPE[ext]
         return self.VIDEO_TYPE['avi']
 
-
-video = cv2.VideoCapture('main/video.mov')
+with open('/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/appcoverage/path.txt', 'r') as file:
+    text = file.read()
+if text == 'Nothing2' or text == 'Nothing':
+    video = cv2.VideoCapture(0)
+else:
+    video = cv2.VideoCapture(text)
 if not video.isOpened():
     raise ValueError("error opening video")
 length = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -75,35 +79,42 @@ config = CFEVideoConf(video, filepath='saved-media/filter.mp4', res='480p')
 name = "BGR"
 count = 0
 lastframe = ''
+print(width, height)
 while True:
     with pyvirtualcam.Camera(width, height, fps, fmt=eval(f"PixelFormat.{name}"), print_fps=fps) as cam:
         print(f'Virtual cam started: {cam.device} ({cam.width}x{cam.height} @ {cam.fps}fps)')
         while True:
             # Restart video on last frame.
-            if count == length:
+            with open('/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/appcoverage/path.txt',
+                      'r') as file:
+                text = file.read()
+            # print(text)
+            if count == length and text not in ['Nothing', 'Nothing2'] and length != 0:
                 count = 0
                 video.set(cv2.CAP_PROP_POS_FRAMES, 0)
 
             # Read video frame.
             ret, frame = video.read()
-
-            if not ret:
-                raise RuntimeError('Error fetching frame')
-            try:
-                f = open("main/filtername.txt", "r").read()
-                frame = eval(f + ".filters(frame)")
-            except Exception as ex:
-                pass
-            # Send to virtual cam.
-            try:
-                lastframe = frame
-                cam.send(frame)
-            except Exception:
-                if name == "GRAY":
-                    name = "BGR"
-                else:
-                    name = "GRAY"
-                count += 1
-                break
+            print(ret)
+            cam.send(frame)
+            # print(frame)
+            # if not ret:
+            #     raise RuntimeError('Error fetching frame')
+            # try:
+            #     f = open("main/filtername.txt", "r").read()
+            #     frame = eval(f + ".filters(frame)")
+            # except Exception as ex:
+            #     pass
+            # # Send to virtual cam.
+            # try:
+            #     lastframe = frame
+            #     cam.send(frame)
+            # except Exception:
+            #     if name == "GRAY":
+            #         name = "BGR"
+            #     else:
+            #         name = "GRAY"
+            #     count += 1
+            #     break
             cam.sleep_until_next_frame()
             count += 1

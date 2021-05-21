@@ -1,1 +1,1 @@
-/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/appcoverage/test.py
+/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/main/video.mov

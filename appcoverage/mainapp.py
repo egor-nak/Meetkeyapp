@@ -381,21 +381,17 @@ if __name__ == '__main__':
                     selectbutton.show()
                     filaenamedisplay.show()
                 if recordbutton.click_detection(pos[0], pos[1]):
-                    print(100000)
+                    os.system('python file_selection.py')
                 if selectbutton.click_detection(pos[0], pos[1]):
-                    print(101)
-                    os.system('python test.py')
+                    os.system('python file_selection.py')
                     with open("path.txt", 'r') as pat:
                         text = pat.read()
-                    print(text)
                     while text == 'Nothing':
                         with open("path.txt", 'r') as pat:
                             text = pat.read()
-                        print(text)
-                    print('h')
             if event.type == pygame.QUIT:
                 running = False
-        # clock.tick(fps)
+        clock.tick(fps)
         sprite_group.update()
         sprite_group.draw(screen)
         for sp in sprite:

@@ -1,20 +1,90 @@
+# import cv2
+#
+# capture = cv2.VideoCapture(0)
+#
+# fourcc = cv2.VideoWriter_fourcc('X', 'V', 'I', 'D')
+# videoWriter = cv2.VideoWriter(
+#     '/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/appcoverage/cam_video_meetkey.avi', fourcc, 30.0,
+#     (640, 480))
+#
+# while (True):
+#
+#     ret, frame = capture.read()
+#
+#     if ret:
+#         cv2.imshow('video', frame)
+#         videoWriter.write(frame)
+#
+#     if cv2.waitKey(1) & 0XFF == ord(' '):
+#         break
+#
+# capture.release()
+# videoWriter.release()
+#
+# cv2.destroyAllWindows()
+
+
+import numpy as np
+import os
 import cv2
 
-# Capture video from webcam
-vid_capture = cv2.VideoCapture(0)
-vid_cod = cv2.VideoWriter_fourcc(*'XVID')
-output = cv2.VideoWriter("cam_video_meetkey.mp4", vid_cod, 20.0, (640, 480))
-while (True):
-    # Capture each frame of webcam video
-    ret, frame = vid_capture.read()
-    cv2.imshow("My cam video", frame)
-    output.write(frame)
-    # Close and break the loop after pressing space key
-    if cv2.waitKey(1) & 0XFF == ord(' '):
+
+filename = 'cam_video_meetkey.avi'
+frames_per_second = 30.0
+res = '720p'
+
+# Set resolution for the video capture
+# Function adapted from https://kirr.co/0l6qmh
+def change_res(cap, width, height):
+    cap.set(3, width)
+    cap.set(4, height)
+
+# Standard Video Dimensions Sizes
+STD_DIMENSIONS =  {
+    "480p": (640, 480),
+    "720p": (1280, 720),
+    "1080p": (1920, 1080),
+    "4k": (3840, 2160),
+}
+
+
+# grab resolution dimensions and set video capture to it.
+def get_dims(cap, res='1080p'):
+    width, height = STD_DIMENSIONS["480p"]
+    if res in STD_DIMENSIONS:
+        width,height = STD_DIMENSIONS[res]
+    ## change the current caputre device
+    ## to the resulting resolution
+    change_res(cap, width, height)
+    return width, height
+
+# Video Encoding, might require additional installs
+# Types of Codes: http://www.fourcc.org/codecs.php
+VIDEO_TYPE = {
+    'avi': cv2.VideoWriter_fourcc(*'XVID'),
+    #'mp4': cv2.VideoWriter_fourcc(*'H264'),
+    'mp4': cv2.VideoWriter_fourcc(*'XVID'),
+}
+
+def get_video_type(filename):
+    filename, ext = os.path.splitext(filename)
+    if ext in VIDEO_TYPE:
+      return  VIDEO_TYPE[ext]
+    return VIDEO_TYPE['avi']
+
+
+
+cap = cv2.VideoCapture(0)
+out = cv2.VideoWriter(filename, get_video_type(filename), 30, get_dims(cap, res))
+
+while True:
+    ret, frame = cap.read()
+    out.write(frame)
+    cv2.imshow('frame',frame)
+    if cv2.waitKey(1) & 0xFF == ord('q') or cv2.waitKey(1) & 0XFF == ord(' '):
         break
-# close the already opened camera
-vid_capture.release()
-# close the already opened file
-output.release()
-# close the window and de-allocate any associated memory usage
+
+
+cap.release()
+out.release()
 cv2.destroyAllWindows()

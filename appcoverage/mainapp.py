@@ -3,6 +3,19 @@ import pygame
 import easygui
 import os
 from threading import Thread
+import imageio
+
+def convertfrom_mp4_to_avi(src_dir, dst_dir):
+    # src_dir = "my/source/video.mp4"
+    # dst_dir = "my/dst/video.avi"
+
+    reader = imageio.get_reader(src_dir)
+    fps = reader.get_meta_data()['fps']
+    writer = imageio.get_writer(dst_dir, fps=fps)
+
+    for im in reader:
+        writer.append_data(im[:, :, :])
+    writer.close()
 
 
 # класс который отвечает за кнопку начала
@@ -383,7 +396,9 @@ while running:
                 selectbutton.show()
                 filaenamedisplay.show()
             if recordbutton.click_detection(pos[0], pos[1]):
-                pass
+                os.system('python /Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/appcoverage/video_recording.py')
+                with open("path.txt", 'w') as file:
+                    file.write(f"/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/appcoverage/cam_video_meetkey.avi")
             if selectbutton.click_detection(pos[0], pos[1]):
                 os.system('python file_selection.py')
                 with open("path.txt", 'r') as pat:

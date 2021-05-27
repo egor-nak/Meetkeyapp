@@ -12,7 +12,6 @@ def notify(title, subtitle, message):
     os.system('terminal-notifier {}'.format(' '.join([m, t, s])))
 
 
-time.sleep(12)
 # Calling the function
 notify(title='MEETKEY',
        subtitle='',

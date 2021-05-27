@@ -85,7 +85,7 @@ while True:
         while True:
             if changevideo:
                 break
-            with pyvirtualcam.Camera(width, height, fps, fmt=eval(f"PixelFormat.{name}"), print_fps=fps) as cam:
+            with pyvirtualcam.Camera(width, height, fps, fmt=eval(f"PixelFormat.{name}")) as cam:
                 print(f'Virtual cam started: {cam.device} ({cam.width}x{cam.height} @ {cam.fps}fps)')
                 while True:
                     with open('/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/appcoverage/path.txt',
@@ -132,7 +132,7 @@ while True:
         while True:
             if changevideo:
                 break
-            with pyvirtualcam.Camera(width, height, fps, fmt=eval(f"PixelFormat.{name}"), print_fps=fps) as cam:
+            with pyvirtualcam.Camera(width, height, fps, fmt=eval(f"PixelFormat.{name}")) as cam:
                 print(f'Virtual cam started: {cam.device} ({cam.width}x{cam.height} @ {cam.fps}fps)')
                 while True:
                     with open('/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/appcoverage/path.txt',

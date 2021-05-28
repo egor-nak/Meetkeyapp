@@ -13,6 +13,10 @@ def record_volume(indx):
     r = sr.Recognizer()
     prev = ''
     while True:
+        with open('/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/appcoverage/stopall.txt',
+                  'r') as file:
+            if file.read() == 'Yes':
+                quit()
         with open("/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/main/canfindcheckword.txt",
                   'r') as file:
             ans = file.read()

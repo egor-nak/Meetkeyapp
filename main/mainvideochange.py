@@ -88,6 +88,10 @@ while True:
             with pyvirtualcam.Camera(width, height, fps, fmt=eval(f"PixelFormat.{name}")) as cam:
                 print(f'Virtual cam started: {cam.device} ({cam.width}x{cam.height} @ {cam.fps}fps)')
                 while True:
+                    with open('/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/appcoverage/stopall.txt',
+                              'r') as file:
+                        if file.read() == 'Yes':
+                            quit()
                     with open('/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/appcoverage/path.txt',
                               'r') as file:
                         text = file.read()
@@ -135,6 +139,10 @@ while True:
             with pyvirtualcam.Camera(width, height, fps, fmt=eval(f"PixelFormat.{name}")) as cam:
                 print(f'Virtual cam started: {cam.device} ({cam.width}x{cam.height} @ {cam.fps}fps)')
                 while True:
+                    with open('/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/appcoverage/stopall.txt',
+                              'r') as file:
+                        if file.read() == 'Yes':
+                            quit()
                     with open('/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/appcoverage/path.txt',
                               'r') as file:
                         text = file.read()

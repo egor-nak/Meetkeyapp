@@ -316,6 +316,10 @@ sprite.append(enddetectionbutton)
 
 flag_not_main_window = False
 while running:
+    with open('stopall.txt', 'r') as file:
+        if file.read() == 'Yes':
+            pygame.quit()
+            exit()
     screen.fill((255, 255, 255))
     # обновление статуса выбора файла
     filaenamedisplay.update()
@@ -391,3 +395,5 @@ while running:
     pygame.display.update()
     pygame.display.flip()
 pygame.quit()
+with open('stopall.txt', 'w') as file:
+    file.write('Yes')

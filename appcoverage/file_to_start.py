@@ -10,4 +10,13 @@ with open("/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/main/fi
     pat.write('Nothing223')
 with open("/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/main/canfindcheckword.txt", 'w') as pat:
     pat.write('No')
+with open("/Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/appcoverage/stopall.txt", 'w') as pat:
+    pat.write('No')
+print('Stop')
 os.system('python /Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/appcoverage/mainapp.py & python /Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/main/mainvideochange.py & python /Users/egor.nakonechnyyicloud.com/PycharmProjects/MEETKEYmain/main/testing.py')
+try:
+    while True:
+        pass
+except KeyboardInterrupt:
+    with open('stopall.txt', 'w') as file:
+        file.write('Yes')
